@@ -57,7 +57,7 @@ async def exec(cmd):
 async def account_login(bot: Client, m: Message):
  editable = await m.reply_text("**Hello Mr./Mrs. I'm Ready to use \nSend /txt to extract video and for classplus send /clps  for /dhurina for /vision**")
 
-@bot.on_message(filters.command(["txt"]))&  (filters.chat(sudo_groups)))
+@bot.on_message(filters.command(["txt"])&  (filters.chat(sudo_groups)))
 async def account_login(bot: Client, m: Message):
 	global cancel
 	cancel = False
