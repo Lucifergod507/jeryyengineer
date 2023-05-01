@@ -33,11 +33,15 @@ BOT_TOKEN = "6035826077:AAHgRPROsmGkK8dVMwo2rQaLnq4JvCx5HvM"
 AUTH_USERS = 5760012562
 sudo_users = [5760012562]
 bot = Client(
-	"bot",
-	bot_token=BOT_TOKEN,
-	api_id=API_ID,
-	api_hash=API_HASH
+    "bot",
+    bot_token=os.environ.get("BOT_TOKEN"),
+    api_id=int(os.environ.get("API_ID")),
+    api_hash=os.environ.get("API_HASH")
 )
+auth_users = [ int(chat) for chat in os.environ.get("AUTH_USERS").split(",") if chat != '']
+sudo_users = auth_users
+sudo_groups = [ int(chat) for chat in os.environ.get("GROUPS").split(",")  if chat != '']
+
 async def exec(cmd):
   proc = await asyncio.create_subprocess_exec(*cmd,
 		stdout=asyncio.subprocess.PIPE,
@@ -49,11 +53,11 @@ async def exec(cmd):
   
   
   
-@bot.on_message(filters.command(["start"]))
+@bot.on_message(filters.command(["start"]))&  (filters.chat(sudo_groups)))
 async def account_login(bot: Client, m: Message):
  editable = await m.reply_text("**Hello Mr./Mrs. I'm Ready to use \nSend /txt to extract video and for classplus send /clps  for /dhurina for /vision**")
 
-@bot.on_message(filters.command(["txt"]))
+@bot.on_message(filters.command(["txt"]))&  (filters.chat(sudo_groups)))
 async def account_login(bot: Client, m: Message):
 	global cancel
 	cancel = False
@@ -184,18 +188,18 @@ async def account_login(bot: Client, m: Message):
 			pass  
 		  
 
-@bot.on_message(filters.command(["cancel"]))
+@bot.on_message(filters.command(["cancel"])&  (filters.chat(sudo_groups)))
 async def cancel(_, m):
 	editable = await m.reply_text("Canceling All process Plz wait")
 	global cancel
 	cancel = True
 	await editable.edit("cancled")
 	return
-@bot.on_message(filters.command("restart"))
+@bot.on_message(filters.command("restart")&  (filters.chat(sudo_groups)))
 async def restart_handler(_, m):
 	await m.reply_text("Restarted!", True)
 	os.execl(sys.executable, sys.executable, *sys.argv)
-@bot.on_message(filters.command(["clps"]))
+@bot.on_message(filters.command(["clps"])&  (filters.chat(sudo_groups)))
 async def account_login(bot: Client, m: Message):
 	
 	editable = await m.reply_text("**Send Txt File**")
@@ -547,7 +551,7 @@ async def account_login(bot: Client, m: Message):
 		await m.reply_text(e)
 	await m.reply_text("Done")
 	
-@bot.on_message(filters.command(["dhurina"]))
+@bot.on_message(filters.command(["dhurina"])&  (filters.chat(sudo_groups)))
 async def account_login(bot: Client, m: Message):
 	editable = await m.reply_text("Send txt file**")
 	input: Message = await bot.listen(editable.chat.id)
@@ -720,7 +724,7 @@ async def account_login(bot: Client, m: Message):
 		await m.reply_text(e)
 	await m.reply_text("Done")
 	
-@bot.on_message(filters.command(["vision"]))
+@bot.on_message(filters.command(["vision"])&  (filters.chat(sudo_groups)))
 async def account_login(bot: Client, m: Message):
 	
 	editable = await m.reply_text("Send txt file")
